@@ -1,107 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="edu.niu.cs.z1761257.popnbooze.MainActivity">
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
 
-    <Button
-        android:layout_width="80dp"
-        android:layout_height="100dp"
-        android:id="@+id/cokeButton"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:onClick="coke"
-        android:background="@drawable/coke"
-        android:layout_toStartOf="@+id/insertCashButton" />
-
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/cashTextView"
-        android:layout_above="@+id/insertCashButton"
-        android:layout_alignEnd="@+id/moneyEditText"
-        android:layout_alignParentStart="true"
-        android:layout_gravity="center_vertical" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Insert Cash"
-        android:id="@+id/insertCashButton"
-        android:onClick="insertCash"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_gravity="center_horizontal|bottom" />
-
-    <Button
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:id="@+id/pepsiButton"
-        android:onClick="pepsi"
-        android:background="@drawable/pepsi"
-        android:layout_gravity="right|top"
-        android:layout_alignParentTop="true"
-        android:layout_alignEnd="@+id/insertCashButton" />
-
-    <Button
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:id="@+id/spriteButton"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:onClick="sprite"
-        android:background="@drawable/sprite"
-        android:layout_gravity="center_horizontal|top" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:id="@+id/moneyEditText"
-        android:text="money"
-        android:layout_alignParentEnd="true"
-        android:layout_above="@+id/cashTextView"
-        android:layout_gravity="left|center_vertical" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Blue Guy"
-        android:id="@+id/blueguyButton"
-        android:background="@drawable/blueguy"
-        android:layout_below="@+id/pepsiButton"
-        android:layout_alignEnd="@+id/pepsiButton"
-        android:layout_alignBottom="@+id/fireballButton"
-        android:layout_toEndOf="@+id/fireballButton"
-        android:layout_marginTop="10dp" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="120dp"
-        android:text="Fireball"
-        android:id="@+id/fireballButton"
-        android:layout_gravity="right|center_vertical"
-        android:background="@drawable/fireball"
-        android:layout_below="@+id/cokeButton"
-        android:layout_alignParentStart="true"
-        android:layout_toStartOf="@+id/pepsiButton"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="10dp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Total"
-        android:id="@+id/totalTV"
-        android:layout_above="@+id/moneyEditText"
-        android:layout_alignParentStart="true"
-        android:layout_alignEnd="@+id/moneyEditText"
-        android:layout_gravity="left|bottom" />
+    <ListView
+        android:id="@+id/listview"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" />
 
 </RelativeLayout>
