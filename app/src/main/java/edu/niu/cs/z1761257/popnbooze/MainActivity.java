@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseException;
@@ -75,13 +77,13 @@ public class MainActivity extends AppCompatActivity {
                 ob = query.find();
                 for (ParseObject drink : ob) {
                     // Locate images in flag column
-               //     ParseFile image = (ParseFile) country.get("flag");
+                    ParseFile image = (ParseFile) drink.get("item_img");
 
                     Drink drinks = new Drink();
                     drinks.setItem_Name((String) drink.get("item_Name"));
                     drinks.setItem_Cost((String) drink.get("item_Price"));
                     drinks.setItem_Qty((String) drink.get("item_Qty"));
-                    drinks.setItem_img((String) drink.get("item_Img"));
+                    drinks.setItem_img( image.getUrl());
                    // drinks.setFlag(image.getUrl());
                     drinklist.add(drinks);
                 }
@@ -140,4 +142,6 @@ public class MainActivity extends AppCompatActivity {
     public static Double getMoney() {
         return Money;
     }
+
+
 }

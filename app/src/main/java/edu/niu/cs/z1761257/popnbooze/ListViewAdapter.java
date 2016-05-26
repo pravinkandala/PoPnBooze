@@ -31,8 +31,10 @@ public class ListViewAdapter extends BaseAdapter {
         private ArrayList<Drink> arraylist;
         Button bill20Btn;
 //        Double money = MainActivity.getMoney();
-        static Double total = MainActivity.TOTAL;
+        static Double total = 0.0;
         final ParseObject eventObject = new ParseObject("Drinks");
+        Cart cart = new Cart();
+        OptimalAmount optimalAmount = new OptimalAmount();
 
 
 
@@ -100,10 +102,10 @@ public class ListViewAdapter extends BaseAdapter {
                 //Code goes here
 //                Toast.makeText(context, "Money: $" + Drink.getMoney(), Toast.LENGTH_SHORT).show();
 
+                Drink selectedDrink = drinkList.get(position);
+                Double cost = Double.parseDouble(selectedDrink.getItem_Cost());
 
-                Double cost = Double.parseDouble(drinkList.get(position).getItem_Cost());
-
-                Double qty = Double.parseDouble(drinkList.get(position).getItem_Qty());
+                Double qty = Double.parseDouble(selectedDrink.getItem_Qty());
 
                 Double a = MainActivity.getMoney();
 
@@ -113,7 +115,7 @@ public class ListViewAdapter extends BaseAdapter {
                     a -= cost;
                     MainActivity.setMoney(a);
                     qty = qty - 1;
-                    drinkList.get(position).setItem_Qty(qty.toString());
+                    selectedDrink.setItem_Qty(qty.toString());
 //                    eventObject.put("item_Name",drinkList.get(position).getItem_Name());
 //                    eventObject.put("item_Qty",qty);
 //                    eventObject.saveInBackground(new SaveCallback() {
@@ -127,6 +129,15 @@ public class ListViewAdapter extends BaseAdapter {
 //                    });
                     MainActivity.moneyTV.setText("money: $" + new DecimalFormat("##.##").format(a));
                     MainActivity.totalTV.setText("Total: " + new DecimalFormat("##.##").format(total));
+
+                    int existingValue = cart.cartItems.containsKey(selectedDrink) ? cart.cartItems.get(selectedDrink) : 0;
+                    cart.cartItems.put(selectedDrink,existingValue + 1);
+
+                    cart.optimise(a);
+                    optimalAmount = cart.getReturnAmount();
+
+                    Toast.makeText(context,"Dollars:"+ optimalAmount.dollars + "Quarters" + optimalAmount.quarters + "Dimes: " + optimalAmount.dimes + "Cents: "+ optimalAmount.cents,Toast.LENGTH_SHORT).show();
+
                 } else if (qty < 1) {
 
                     MainActivity.mp.start();
