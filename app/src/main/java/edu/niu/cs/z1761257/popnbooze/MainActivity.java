@@ -1,31 +1,21 @@
 package edu.niu.cs.z1761257.popnbooze;
 
 import android.app.ProgressDialog;
-import android.content.Context;
-import android.location.Location;
+import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.InflateException;
-import android.widget.Button;
 import android.widget.ListView;
-import android.widget.Toast;
-
-import com.parse.Parse;
-import com.parse.ParseGeoPoint;
+import android.widget.TextView;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseException;
-import com.parse.ParseFile;
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
-import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
+
 
 
 public class MainActivity extends AppCompatActivity {
@@ -35,7 +25,12 @@ public class MainActivity extends AppCompatActivity {
     List<ParseObject> ob;
     ProgressDialog mProgressDialog;
     ListViewAdapter adapter;
-    private List<Drinks> drinklist = null;
+    private List<Drink> drinklist = null;
+    static Double Money = 0.0, TOTAL =0.0;
+    public static TextView moneyTV;
+    public static TextView totalTV;
+    Drink drink;
+    static final MediaPlayer mp = new MediaPlayer();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -44,6 +39,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         // Execute RemoteDataTask AsyncTask
         new RemoteDataTask().execute();
+        moneyTV = (TextView)findViewById(R.id.moneyTextView);
+        totalTV = (TextView)findViewById(R.id.itemTotalTextView);
+        mp.create(this,R.raw.basso);
     }
 
     // RemoteDataTask AsyncTask
@@ -65,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected Void doInBackground(Void... params) {
             // Create the array
-            drinklist = new ArrayList<Drinks>();
+            drinklist = new ArrayList<Drink>();
             try {
                 // Locate the class table named "Country" in Parse.com
                 ParseQuery<ParseObject> query = new ParseQuery<ParseObject>(
@@ -79,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
                     // Locate images in flag column
                //     ParseFile image = (ParseFile) country.get("flag");
 
-                    Drinks drinks = new Drinks();
+                    Drink drinks = new Drink();
                     drinks.setItem_Name((String) drink.get("item_Name"));
                     drinks.setItem_Cost((String) drink.get("item_Price"));
                     drinks.setItem_Qty((String) drink.get("item_Qty"));
@@ -108,5 +106,38 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void b20(View view){
+        Money += 20;
+        Display();
+    }
+    public void b10(View view){
+        Money += 10;
+        Display();
+    }
+    public void b5(View view){
+        Money += 5;
+        Display();
+    }
+    public void b1(View view){
+        Money += 1;
+        Display();
+    }
+    public void bp25(View view){
+        Money += 0.25;
+        Display();
+    }
 
+    public void Display(){
+        this.setMoney(Money);
+
+        moneyTV.setText("Money: $"+new DecimalFormat("##.##").format(Money));
+    }
+
+    public static void setMoney(Double money) {
+        Money = money;
+    }
+
+    public static Double getMoney() {
+        return Money;
+    }
 }

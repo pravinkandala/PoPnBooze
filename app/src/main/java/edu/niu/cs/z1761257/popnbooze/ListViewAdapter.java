@@ -5,9 +5,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,15 +23,21 @@ public class ListViewAdapter extends BaseAdapter {
         Context context;
         LayoutInflater inflater;
         ImageLoader imageLoader;
-        private List<Drinks> drinkList = null;
-        private ArrayList<Drinks> arraylist;
+        private List<Drink> drinkList = null;
+        private ArrayList<Drink> arraylist;
+        Button bill20Btn;
+//        Double money = MainActivity.getMoney();
+        static Double total = MainActivity.TOTAL;
+
+
+
 
         public ListViewAdapter(Context context,
-                List<Drinks> drinkList) {
+                List<Drink> drinkList) {
             this.context = context;
             this.drinkList = drinkList;
             inflater = LayoutInflater.from(context);
-            this.arraylist = new ArrayList<Drinks>();
+            this.arraylist = new ArrayList<Drink>();
             this.arraylist.addAll(drinkList);
             imageLoader = new ImageLoader(context);
         }
@@ -84,9 +92,40 @@ public class ListViewAdapter extends BaseAdapter {
 
             @Override
             public void onClick(View arg0) {
- //Code goes here
+                //Code goes here
+//                Toast.makeText(context, "Money: $" + Drink.getMoney(), Toast.LENGTH_SHORT).show();
+
+
+                Double cost = Double.parseDouble(drinkList.get(position).getItem_Cost());
+
+                Double qty = Double.parseDouble(drinkList.get(position).getItem_Qty());
+
+                Double a = MainActivity.getMoney();
+
+
+                if (a > cost && qty > 0) {
+                    total += cost;
+                    a -= cost;
+                    MainActivity.setMoney(a);
+                    qty = qty - 1;
+                    drinkList.get(position).setItem_Qty(qty.toString());
+                    MainActivity.moneyTV.setText("money: $" + new DecimalFormat("##.##").format(a));
+                    MainActivity.totalTV.setText("Total: " + new DecimalFormat("##.##").format(total));
+                } else if (qty < 1) {
+
+                    MainActivity.mp.start();
+
+                    MainActivity.totalTV.setText("No Coke Stock");
+
+                } else {
+                    double b = cost - a;
+                    MainActivity.totalTV.setText("Need more $" + b);
+                }
             }
+
         });
         return view;
+
+
     }
 }

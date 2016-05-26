@@ -4,10 +4,11 @@ package edu.niu.cs.z1761257.popnbooze;
  * Created by Pravin on 5/25/16.
  * Project: Pop'N'Booze
  */
-public class Drinks {
+public class Drink {
 
     private String item_Name,item_img;
     private String item_Cost, item_Calories, item_Qty;
+
 
     public void setItem_Name(String item_Name) {
         this.item_Name = item_Name;
@@ -48,4 +49,5 @@ public class Drinks {
     public String getItem_img() {
         return item_img;
     }
+
 }
