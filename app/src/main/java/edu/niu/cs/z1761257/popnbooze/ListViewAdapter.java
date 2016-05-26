@@ -8,10 +8,14 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.SaveCallback;
 
 /**
  * Created by Pravin on 5/25/16.
@@ -28,6 +32,7 @@ public class ListViewAdapter extends BaseAdapter {
         Button bill20Btn;
 //        Double money = MainActivity.getMoney();
         static Double total = MainActivity.TOTAL;
+        final ParseObject eventObject = new ParseObject("Drinks");
 
 
 
@@ -109,6 +114,17 @@ public class ListViewAdapter extends BaseAdapter {
                     MainActivity.setMoney(a);
                     qty = qty - 1;
                     drinkList.get(position).setItem_Qty(qty.toString());
+//                    eventObject.put("item_Name",drinkList.get(position).getItem_Name());
+//                    eventObject.put("item_Qty",qty);
+//                    eventObject.saveInBackground(new SaveCallback() {
+//                        public void done(ParseException e) {
+//                            if (e == null) {
+//                              //  Toast.makeText(getActivity(), "success", Toast.LENGTH_SHORT).show();
+//                            } else {
+//                                Toast.makeText(context, "fail to connect parse.com", Toast.LENGTH_SHORT).show();
+//                            }
+//                        }
+//                    });
                     MainActivity.moneyTV.setText("money: $" + new DecimalFormat("##.##").format(a));
                     MainActivity.totalTV.setText("Total: " + new DecimalFormat("##.##").format(total));
                 } else if (qty < 1) {
@@ -125,6 +141,8 @@ public class ListViewAdapter extends BaseAdapter {
 
         });
         return view;
+
+
 
 
     }
