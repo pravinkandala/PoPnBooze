@@ -74,8 +74,8 @@ public class ListViewAdapter extends BaseAdapter {
         }
         // Set the results into TextViews
         holder.name.setText(drinkList.get(position).getItem_Name());
-//        holder.price.setText(drinkList.get(position).getItem_Cost().toString());
-//        holder.qty.setText(drinkList.get(position).getItem_Qty().toString());
+        holder.price.setText(drinkList.get(position).getItem_Cost());
+        holder.qty.setText(drinkList.get(position).getItem_Qty());
         // Set the results into ImageView
         imageLoader.DisplayImage(drinkList.get(position).getItem_img(),
                 holder.pic);

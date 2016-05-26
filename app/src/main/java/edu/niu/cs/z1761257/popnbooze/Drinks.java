@@ -7,7 +7,7 @@ package edu.niu.cs.z1761257.popnbooze;
 public class Drinks {
 
     private String item_Name,item_img;
-    private Double item_Cost, item_Calories, item_Qty;
+    private String item_Cost, item_Calories, item_Qty;
 
     public void setItem_Name(String item_Name) {
         this.item_Name = item_Name;
@@ -17,27 +17,27 @@ public class Drinks {
         return item_Name;
     }
 
-    public void setItem_Cost(Double item_Cost) {
+    public void setItem_Cost(String item_Cost) {
         this.item_Cost = item_Cost;
     }
 
-    public Double getItem_Cost() {
+    public String getItem_Cost() {
         return item_Cost;
     }
 
-    public void setItem_Qty(Double item_Qty) {
+    public void setItem_Qty(String item_Qty) {
         this.item_Qty = item_Qty;
     }
 
-    public Double getItem_Qty() {
+    public String getItem_Qty() {
         return item_Qty;
     }
 
-    public void setItem_Calories(Double item_Calories) {
+    public void setItem_Calories(String item_Calories) {
         this.item_Calories = item_Calories;
     }
 
-    public Double getItem_Calories() {
+    public String getItem_Calories() {
         return item_Calories;
     }
 

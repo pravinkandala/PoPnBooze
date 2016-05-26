@@ -75,15 +75,15 @@ public class MainActivity extends AppCompatActivity {
                 query.orderByAscending("itemQty");
 
                 ob = query.find();
-                for (ParseObject country : ob) {
+                for (ParseObject drink : ob) {
                     // Locate images in flag column
                //     ParseFile image = (ParseFile) country.get("flag");
 
                     Drinks drinks = new Drinks();
-                    drinks.setItem_Name((String) country.get("item_Name"));
-//                    drinks.setItem_Cost((Double) country.get("item_Cost"));
-//                    drinks.setItem_Qty((Double) country.get("item_Qty"));
-                    drinks.setItem_img((String) country.get("item_Img"));
+                    drinks.setItem_Name((String) drink.get("item_Name"));
+                    drinks.setItem_Cost((String) drink.get("item_Price"));
+                    drinks.setItem_Qty((String) drink.get("item_Qty"));
+                    drinks.setItem_img((String) drink.get("item_Img"));
                    // drinks.setFlag(image.getUrl());
                     drinklist.add(drinks);
                 }
