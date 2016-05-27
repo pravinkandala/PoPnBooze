@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -17,8 +18,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import android.view.View;
-
-
+import android.widget.Toast;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -33,7 +33,12 @@ public class MainActivity extends AppCompatActivity {
     public static TextView moneyTV;
     public static TextView totalTV;
    // Drink drink;
-    static final MediaPlayer mp = new MediaPlayer();
+//    static final MediaPlayer mp = new MediaPlayer();
+    static Button toggle;
+
+    //creating objects for Cart and OptimalAmount classes
+    Cart cart = new Cart();
+    OptimalAmount optimalAmount = new OptimalAmount();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -44,7 +49,12 @@ public class MainActivity extends AppCompatActivity {
         new RemoteDataTask().execute();
         moneyTV = (TextView)findViewById(R.id.moneyTextView);
         totalTV = (TextView)findViewById(R.id.itemTotalTextView);
-        mp.create(this,R.raw.basso);
+//        mp.create(this,R.raw.basso);
+
+        toggle = (Button)findViewById(R.id.collectButton);
+       // toggle.setVisibility(View.INVISIBLE);
+        toggle.setText("-- Pop 'N' Booze --");
+        toggle.setEnabled(false);
     }//end of onCreate
 
     // RemoteDataTask AsyncTask
@@ -153,6 +163,10 @@ public class MainActivity extends AppCompatActivity {
         this.setMoney(Money);
 
         moneyTV.setText("Money: $"+new DecimalFormat("##.##").format(Money));
+        toggle.setEnabled(true);
+        toggle.setVisibility(View.VISIBLE);
+        toggle.setText("Refund");
+        totalTV.setText("");
     }
 
 
@@ -164,6 +178,32 @@ public class MainActivity extends AppCompatActivity {
 
     public static Double getMoney() {
         return Money;
+    }
+
+    public void collectDrinks(View view){
+
+        cart.optimise(getMoney());
+        optimalAmount = cart.getReturnAmount();
+        cart.getCartItems();
+
+        cart.getCalories();
+
+        MediaPlayer abc = MediaPlayer.create(getApplicationContext(), R.raw.basso);
+        abc.start();
+
+        Toast.makeText(this,"Dollar :"+optimalAmount.dollars+", Quarters: "+optimalAmount.quarters
+        +", Dimes :"+optimalAmount.dimes+" Nickels: "+optimalAmount.nickels+ ", Cents: "+optimalAmount.cents
+
+                + cart.getCartItems(),
+                Toast.LENGTH_LONG).show();
+
+        ListViewAdapter.setBalance(0.0);
+        setMoney(0.0);
+        toggle.setText("-- Pop 'N' Booze --");
+        toggle.setEnabled(false);
+        moneyTV.setText("");
+        totalTV.setText("Bye..");
+
     }
 
 

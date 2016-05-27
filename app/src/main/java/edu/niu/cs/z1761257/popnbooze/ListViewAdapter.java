@@ -18,11 +18,12 @@ import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
-
 /**
  * Created by Pravin on 5/25/16.
  * Project: Pop'N'Booze
  */
+
+
 public class ListViewAdapter extends BaseAdapter {
 
 
@@ -34,9 +35,8 @@ public class ListViewAdapter extends BaseAdapter {
         ImageLoader imageLoader;
         private List<Drink> drinkList = null;
         private ArrayList<Drink> arraylist;
-
-
-        static Double total = 0.0; //make value of total available on other .java files
+        Double remainingMoney = 0.0;
+        static Double balance = 0.0, newBalance = 0.0;
 
     final ParseQuery<ParseObject> query = ParseQuery.getQuery("Drinks");
 //        final ParseObject parseObject = new ParseObject("Drinks");
@@ -56,6 +56,7 @@ public class ListViewAdapter extends BaseAdapter {
             this.arraylist = new ArrayList<Drink>();
             this.arraylist.addAll(drinkList);
             imageLoader = new ImageLoader(context);
+            setBalance(balance);
         }//end of ListViewAdapter
 
         //Creating a class called ViewHolder which contains
@@ -124,35 +125,44 @@ public class ListViewAdapter extends BaseAdapter {
                 //Toast.makeText(context, "Money: $" + Drink.getMoney(), Toast.LENGTH_SHORT).show();
 
                 final Drink selectedDrink = drinkList.get(position);
-                Double cost = Double.parseDouble(selectedDrink.getItem_Cost());
+                Double itemCost = Double.parseDouble(selectedDrink.getItem_Cost());
 
                 Double qty = Double.parseDouble(selectedDrink.getItem_Qty());
 
-                Double a = MainActivity.getMoney();
+                Double depositeMoney = MainActivity.getMoney();
 
 
-                if (a > cost && qty > 0) {
-                    total += cost;
-                    a -= cost;
-                    MainActivity.setMoney(a);
+
+                if (depositeMoney > itemCost && qty > 0) {
+                    newBalance = getBalance() + itemCost;
+                    remainingMoney = depositeMoney - itemCost;
+                    setBalance(newBalance);
+                    MainActivity.setMoney(depositeMoney);
                     qty = qty - 1;
                     selectedDrink.setItem_Qty(qty.toString());
+                    MainActivity.toggle.setText("Collect");
+                    MainActivity.toggle.setEnabled(true);
+                    MainActivity.toggle.setVisibility(View.VISIBLE);
 
-                    MainActivity.moneyTV.setText("money: $" + new DecimalFormat("##.##").format(a));
-                    MainActivity.totalTV.setText("Total: " + new DecimalFormat("##.##").format(total));
-
-//                    MainActivity.totalTV.setText(selectedDrink.getItem_type());
+                    //update money and total on textview
+                    MainActivity.moneyTV.setText("Balance: $" + new DecimalFormat("##.##").format(remainingMoney));
+                    MainActivity.totalTV.setText("Spent: " + new DecimalFormat("##.##").format(newBalance));
 
                     if(selectedDrink.getItem_type().equals("alcohol")){
                         MainActivity.totalTV.setText("Please show your ID");
                     }
 
 
+
+
                     int existingValue = cart.cartItems.containsKey(selectedDrink) ? cart.cartItems.get(selectedDrink) : 0;
                     cart.cartItems.put(selectedDrink,existingValue + 1);
 
-                    cart.optimise(a);
-                    optimalAmount = cart.getReturnAmount();
+
+//                    cart.optimise(remainingMoney);
+//                    optimalAmount = cart.getReturnAmount();
+
+                    MainActivity.setMoney(remainingMoney);
 
                     Animation animAccelerateDecelerate = AnimationUtils.loadAnimation(context, R.anim.bottle_fall);
                     holder.pic.startAnimation(animAccelerateDecelerate);
@@ -170,19 +180,21 @@ public class ListViewAdapter extends BaseAdapter {
                     });
 
 
+//                    Toast.makeText(context,"Dollars:"+ optimalAmount.dollars + "Quarters" + optimalAmount.quarters + "Dimes: " + optimalAmount.dimes + "Cents: "+ optimalAmount.cents,Toast.LENGTH_SHORT).show();
 
+                }
+                //if there is no quantity available
+                else if (qty < 1) {
 
-                    Toast.makeText(context,"Dollars:"+ optimalAmount.dollars + "Quarters" + optimalAmount.quarters + "Dimes: " + optimalAmount.dimes + "Cents: "+ optimalAmount.cents,Toast.LENGTH_SHORT).show();
-
-                } else if (qty < 1) {
-
-                    MainActivity.mp.start();
+//                    MainActivity.mp.start();
 
                     MainActivity.totalTV.setText("No "+ selectedDrink.getItem_Name() + " Stock");
 
-                } else {
-                    double b = cost - a;
-                    MainActivity.totalTV.setText("Need more $" + b);
+                }
+                //if user has less money than required
+                else {
+                    double negativeMoney = itemCost - remainingMoney;
+                    MainActivity.totalTV.setText("Need more $" + negativeMoney);
                 }
             }
 
@@ -192,9 +204,12 @@ public class ListViewAdapter extends BaseAdapter {
         return view;
     }//end of getView
 
-    public void collectButton(View view){
-        total = 0.0;
-        MainActivity.setMoney(0.0);
+    //Set and get properties for balance.
+   static public void setBalance(Double amount) {
+        balance = amount;
+    }
 
+    static public Double getBalance() {
+        return balance;
     }
 }
