@@ -4,10 +4,18 @@ package edu.niu.cs.z1761257.popnbooze;
  * Created by Pravin on 5/25/16.
  * Project: Pop'N'Booze
  */
+
+/*contains details about drink*/
+
 public class Drink {
 
-    private String item_Name,item_img, objectID,item_type;
-    private String item_Cost, item_Calories, item_Qty;
+    private String item_Name,
+                   item_img,
+                   objectID,
+                   item_type,
+                   item_Cost,
+                   item_Calories,
+                   item_Qty;
 
     public void setObjectID(String objectID) {
         this.objectID = objectID;

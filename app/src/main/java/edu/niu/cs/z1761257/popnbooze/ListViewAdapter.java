@@ -1,6 +1,6 @@
 package edu.niu.cs.z1761257.popnbooze;
-
 import android.content.Context;
+import android.media.MediaPlayer;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,9 +26,6 @@ import com.parse.ParseQuery;
 
 public class ListViewAdapter extends BaseAdapter {
 
-
-        ParseApplication parseApplication = new ParseApplication();
-
         // Declare Variables
         Context context;
         LayoutInflater inflater;
@@ -36,16 +33,12 @@ public class ListViewAdapter extends BaseAdapter {
         private List<Drink> drinkList = null;
         private ArrayList<Drink> arraylist;
         Double remainingMoney = 0.0;
-        static Double balance = 0.0, newBalance = 0.0;
+        static Double balance = 0.0,
+                      newBalance = 0.0;
+        final ParseQuery<ParseObject> query = ParseQuery.getQuery("Drinks");
 
-    final ParseQuery<ParseObject> query = ParseQuery.getQuery("Drinks");
-//        final ParseObject parseObject = new ParseObject("Drinks");
-
-        //creating objects of respective Classes
-        Cart cart = new Cart();
-        OptimalAmount optimalAmount = new OptimalAmount();
-
-
+        //creating object
+        Cart cart = Cart.getInstance();
 
         //Adapter for ListView
         public ListViewAdapter(Context context,
@@ -58,6 +51,7 @@ public class ListViewAdapter extends BaseAdapter {
             imageLoader = new ImageLoader(context);
             setBalance(balance);
         }//end of ListViewAdapter
+
 
         //Creating a class called ViewHolder which contains
         // declaration for elements on listview.
@@ -75,11 +69,13 @@ public class ListViewAdapter extends BaseAdapter {
             return drinkList.size();
         }
 
+
         //returns position of item
         @Override
         public Object getItem(int position) {
             return drinkList.get(position);
         }//getItem
+
 
         //returns id of item
         @Override
@@ -87,7 +83,7 @@ public class ListViewAdapter extends BaseAdapter {
             return position;
         }
 
-    public View getView(final int position, View view, final ViewGroup parent) {
+        public View getView(final int position, View view, final ViewGroup parent) {
 
         final ViewHolder holder;
 
@@ -109,8 +105,8 @@ public class ListViewAdapter extends BaseAdapter {
 
         // Set the results into TextViews
         holder.name.setText(drinkList.get(position).getItem_Name());
-        holder.price.setText(drinkList.get(position).getItem_Cost());
-        holder.calories.setText(drinkList.get(position).getItem_Calories());
+        holder.price.setText("$"+drinkList.get(position).getItem_Cost());
+        holder.calories.setText(drinkList.get(position).getItem_Calories() + " cal");
 
         // Set the results into ImageView
         imageLoader.DisplayImage(drinkList.get(position).getItem_img(),
@@ -121,55 +117,59 @@ public class ListViewAdapter extends BaseAdapter {
 
             @Override
             public void onClick(View arg0) {
-                //Code goes here
-                //Toast.makeText(context, "Money: $" + Drink.getMoney(), Toast.LENGTH_SHORT).show();
 
+                //variables
+                //get drink position
                 final Drink selectedDrink = drinkList.get(position);
                 Double itemCost = Double.parseDouble(selectedDrink.getItem_Cost());
-
-                Double qty = Double.parseDouble(selectedDrink.getItem_Qty());
-
+                int qty = Integer.parseInt(selectedDrink.getItem_Qty());
                 Double depositeMoney = MainActivity.getMoney();
 
-
-
+                /*
+                Logic for each item in the listview
+                if deposited money is greater than the item cost and
+                also if there is item quantity proceed.
+                 */
                 if (depositeMoney > itemCost && qty > 0) {
-                    newBalance = getBalance() + itemCost;
-                    remainingMoney = depositeMoney - itemCost;
-                    setBalance(newBalance);
-                    MainActivity.setMoney(depositeMoney);
-                    qty = qty - 1;
-                    selectedDrink.setItem_Qty(qty.toString());
+                    newBalance = getBalance() + itemCost; //count total spent
+
+                    remainingMoney = depositeMoney - itemCost; //done buying
+
+                    setBalance(newBalance); //set new balance.
+                    MainActivity.setMoney(depositeMoney); //set deposited money
+                    qty = qty - 1; //decrease the quantity
+
+                    selectedDrink.setItem_Qty(Integer.toString(qty));//get quantity of item
+
+                    //Change property of button
                     MainActivity.toggle.setText("Collect");
                     MainActivity.toggle.setEnabled(true);
                     MainActivity.toggle.setVisibility(View.VISIBLE);
 
-                    //update money and total on textview
+                    //Display Balance and Spent amount
                     MainActivity.moneyTV.setText("Balance: $" + new DecimalFormat("##.##").format(remainingMoney));
                     MainActivity.totalTV.setText("Spent: " + new DecimalFormat("##.##").format(newBalance));
 
+
+                    //Check if the item is alcoholic product. if yes display a message
                     if(selectedDrink.getItem_type().equals("alcohol")){
                         MainActivity.totalTV.setText("Please show your ID");
+                        MediaPlayer abc = MediaPlayer.create(context.getApplicationContext(), R.raw.blow);
+                        abc.start();
                     }
 
-
-
-
+                    //create cart items - to calculate calories, quantity etc.,
                     int existingValue = cart.cartItems.containsKey(selectedDrink) ? cart.cartItems.get(selectedDrink) : 0;
                     cart.cartItems.put(selectedDrink,existingValue + 1);
 
 
-//                    cart.optimise(remainingMoney);
-//                    optimalAmount = cart.getReturnAmount();
+                    MainActivity.setMoney(remainingMoney); //set balance
 
-                    MainActivity.setMoney(remainingMoney);
-
+                    //make bottle animate
                     Animation animAccelerateDecelerate = AnimationUtils.loadAnimation(context, R.anim.bottle_fall);
                     holder.pic.startAnimation(animAccelerateDecelerate);
 
-//                    Toast.makeText(context, "Object ID: "+selectedDrink.getObjectID()+", Qty: "+
-//                            selectedDrink.getItem_Qty(),Toast.LENGTH_SHORT).show();
-                    // Retrieve the object by id
+                    //update quantity on cloud
                     query.getInBackground(selectedDrink.getObjectID(), new GetCallback<ParseObject>() {
                         public void done(ParseObject update, ParseException e) {
                             if (e == null) {
@@ -178,23 +178,26 @@ public class ListViewAdapter extends BaseAdapter {
                             }
                         }
                     });
-
-
-//                    Toast.makeText(context,"Dollars:"+ optimalAmount.dollars + "Quarters" + optimalAmount.quarters + "Dimes: " + optimalAmount.dimes + "Cents: "+ optimalAmount.cents,Toast.LENGTH_SHORT).show();
-
                 }
-                //if there is no quantity available
+
+                //check if there is no quantity available and displau a message
                 else if (qty < 1) {
 
-//                    MainActivity.mp.start();
-
                     MainActivity.totalTV.setText("No "+ selectedDrink.getItem_Name() + " Stock");
+
+                    //make noise if there is no quantity
+                    MediaPlayer abc = MediaPlayer.create(context.getApplicationContext(), R.raw.basso);
+                    abc.start();
 
                 }
                 //if user has less money than required
                 else {
-                    double negativeMoney = itemCost - remainingMoney;
-                    MainActivity.totalTV.setText("Need more $" + negativeMoney);
+                    double negativeMoney = MainActivity.getMoney() - itemCost;
+                    MainActivity.totalTV.setText("Need more $" + new DecimalFormat("##.##").format(Math.abs(negativeMoney)));
+
+                    //make noise if user has less money
+                    MediaPlayer abc = MediaPlayer.create(context.getApplicationContext(), R.raw.hero);
+                    abc.start();
                 }
             }
 

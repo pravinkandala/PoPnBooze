@@ -6,6 +6,16 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+
     </style>
+    <color name="dark">#403715</color>
+    <color name="background">#FFF4EE</color>
+    <color name="text">#FFFFFF</color>
+    <color name="title">#FF2600</color>
+    <color name="calories">#6EFF00</color>
+    <color name="price">#FF3A00</color>
+    <color name="button">#403715</color>
+    <color name="buttonBehind">#7f6d2a</color>
+    <color name="textBehind">#7F7831</color>
 
 </resources>

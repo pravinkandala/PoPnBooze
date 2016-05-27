@@ -1,5 +1,11 @@
 package edu.niu.cs.z1761257.popnbooze;
 
+/*
+ Pravin Kandala
+ Android Project: Pop 'N' Booze
+ Description: Vending Machine
+ icons are taken from http://www.flaticon.com/
+ */
 import android.app.ProgressDialog;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
@@ -7,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -16,7 +23,10 @@ import com.parse.ParseQuery;
 import com.parse.ParseException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+
 import android.view.View;
 import android.widget.Toast;
 
@@ -32,12 +42,14 @@ public class MainActivity extends AppCompatActivity {
     static Double Money = 0.0, TOTAL =0.0;
     public static TextView moneyTV;
     public static TextView totalTV;
-   // Drink drink;
-//    static final MediaPlayer mp = new MediaPlayer();
+    EditText outputET;
+    static MediaPlayer abc;
+    // Drink drink;
+    // static final MediaPlayer mp = new MediaPlayer();
     static Button toggle;
 
     //creating objects for Cart and OptimalAmount classes
-    Cart cart = new Cart();
+    Cart cart = Cart.getInstance();
     OptimalAmount optimalAmount = new OptimalAmount();
 
     @Override
@@ -55,6 +67,8 @@ public class MainActivity extends AppCompatActivity {
        // toggle.setVisibility(View.INVISIBLE);
         toggle.setText("-- Pop 'N' Booze --");
         toggle.setEnabled(false);
+        outputET = (EditText)findViewById(R.id.ouputTextField);
+        outputET.setFocusable(false);
     }//end of onCreate
 
     // RemoteDataTask AsyncTask
@@ -105,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
                     drinks.setItem_Name((String) drink.get("item_Name"));
                     drinks.setItem_Cost((String) drink.get("item_Price"));
                     drinks.setItem_Qty((String) drink.get("item_Qty"));
-                    drinks.setObjectID((String) drink.get("objectId"));
+                    drinks.setObjectID((String) drink.getObjectId());
                     drinks.setItem_type((String)drink.get("item_type"));
                     drinks.setItem_Calories((String) drink.get("item_Calories"));
                     drinks.setItem_img( image.getUrl());
@@ -188,14 +202,36 @@ public class MainActivity extends AppCompatActivity {
 
         cart.getCalories();
 
-        MediaPlayer abc = MediaPlayer.create(getApplicationContext(), R.raw.basso);
+        abc = MediaPlayer.create(getApplicationContext(), R.raw.cash);
         abc.start();
 
-        Toast.makeText(this,"Dollar :"+optimalAmount.dollars+", Quarters: "+optimalAmount.quarters
-        +", Dimes :"+optimalAmount.dimes+" Nickels: "+optimalAmount.nickels+ ", Cents: "+optimalAmount.cents
+        //get dispenses items list and quantity
+        String dispenseItems = "Items: \n";
+        for (Map.Entry<Drink, Integer> item : cart.cartItems.entrySet()) {
 
-                + cart.getCartItems(),
-                Toast.LENGTH_LONG).show();
+            dispenseItems += item.getKey().getItem_Name();
+            dispenseItems += ", Qty"+item.getValue();
+            dispenseItems += "\n";
+
+        }
+
+//        Iterator<Entry<Integer, String>> iterator = myMap.entrySet().iterator();
+//        while (iterator.hasNext()) {
+//            Map.Entry<Integer,String> pairs = (Map.Entry<Integer,String>)iterator.next();
+//            String value =  pairs.getValue();
+//            Integer key = pairs.getKey();
+//            System.out.println(key +"--->"+value);
+//        }
+
+
+
+        String output = "\nAmount : $:"+optimalAmount.dollars+",\n Q: "+optimalAmount.quarters
+                +",\n D:"+optimalAmount.dimes+",\n N: "+optimalAmount.nickels+ ",\n ¢: "+optimalAmount.cents;
+
+
+        String calories = ""+cart.getCalories();
+        outputET.setText(dispenseItems +"\nTotal Calories: "+calories+"\n"+output);
+        //Toast.makeText(this,""+listOfDrinks+", Cal:"+calories,Toast.LENGTH_LONG).show();
 
         ListViewAdapter.setBalance(0.0);
         setMoney(0.0);
@@ -204,7 +240,13 @@ public class MainActivity extends AppCompatActivity {
         moneyTV.setText("");
         totalTV.setText("Bye..");
 
+
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        abc.release();
 
+    }
 }//end of MainActivity

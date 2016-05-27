@@ -7,7 +7,7 @@
 
     <ListView
         android:id="@+id/listview"
-        android:layout_width="240dp"
+        android:layout_width="260dp"
         android:layout_height="match_parent"
         android:divider="#ff0000"
         android:dividerHeight="1dp"
@@ -20,63 +20,69 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="180dp"
         android:weightSum="1"
         android:layout_toEndOf="@+id/listview"
         android:id="@+id/linearLayout"
-        android:layout_alignParentTop="true"
-        android:layout_above="@+id/ouputTextField">
+        android:layout_alignParentTop="true">
 
-        <TableLayout
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="279dp">
+            android:layout_height="fill_parent"
+            android:id="@+id/scrollView"
+            android:layout_weight="0.20">
 
-            <TextView
+            <TableLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="Pay Here"
-                android:id="@+id/textView"
-                android:textAlignment="center"
-                android:textIsSelectable="false"
-                android:textSize="24dp" />
+                android:layout_height="279dp">
 
-            <Button
-                android:layout_width="75dp"
-                android:layout_height="wrap_content"
-                android:text="$20"
-                android:id="@+id/bill20"
-                android:onClick="b20" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="Pay Here"
+                    android:id="@+id/textView"
+                    android:textAlignment="center"
+                    android:textIsSelectable="false"
+                    android:textSize="24dp" />
 
-            <Button
-                android:layout_width="75dp"
-                android:layout_height="wrap_content"
-                android:text="$10"
-                android:id="@+id/bill10"
-                android:onClick="b10" />
+                <Button
+                    android:layout_width="75dp"
+                    android:layout_height="wrap_content"
+                    android:text="$20"
+                    android:id="@+id/bill20"
+                    android:onClick="b20" />
 
-            <Button
-                android:layout_width="75dp"
-                android:layout_height="wrap_content"
-                android:text="$5"
-                android:id="@+id/bill5"
-                android:onClick="b5" />
+                <Button
+                    android:layout_width="75dp"
+                    android:layout_height="wrap_content"
+                    android:text="$10"
+                    android:id="@+id/bill10"
+                    android:onClick="b10" />
 
-            <Button
-                android:layout_width="75dp"
-                android:layout_height="wrap_content"
-                android:text="$1"
-                android:id="@+id/bill1"
-                android:onClick="b1" />
+                <Button
+                    android:layout_width="75dp"
+                    android:layout_height="wrap_content"
+                    android:text="$5"
+                    android:id="@+id/bill5"
+                    android:onClick="b5" />
 
-            <Button
-                android:layout_width="75dp"
-                android:layout_height="wrap_content"
-                android:text="$.25"
-                android:id="@+id/button5"
-                android:onClick="bp25" />
+                <Button
+                    android:layout_width="75dp"
+                    android:layout_height="wrap_content"
+                    android:text="$1"
+                    android:id="@+id/bill1"
+                    android:onClick="b1" />
 
-        </TableLayout>
+                <Button
+                    android:layout_width="75dp"
+                    android:layout_height="wrap_content"
+                    android:text="$.25"
+                    android:id="@+id/button5"
+                    android:onClick="bp25" />
+
+            </TableLayout>
+        </ScrollView>
 
     </LinearLayout>
 
@@ -89,7 +95,8 @@
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:layout_above="@+id/itemTotalTextView"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_toStartOf="@+id/linearLayout" />
 
     <TextView
         android:layout_width="match_parent"
@@ -120,12 +127,13 @@
         android:layout_width="match_parent"
         android:layout_height="140dp"
         android:id="@+id/ouputTextField"
-        android:layout_above="@+id/collectButton"
-        android:layout_toEndOf="@+id/listview"
         android:scrollIndicators="right"
         android:nestedScrollingEnabled="true"
         android:inputType="textMultiLine"
         android:singleLine="false"
-        />
+        android:layout_alignParentEnd="true"
+        android:layout_toEndOf="@+id/collectButton"
+        android:layout_alignBottom="@+id/collectButton"
+        android:layout_below="@+id/linearLayout" />
 
 </RelativeLayout>

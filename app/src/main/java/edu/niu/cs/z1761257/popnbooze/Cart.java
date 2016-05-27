@@ -12,6 +12,8 @@ import java.util.Map;
  * Project: Pop'N'Booze
  */
 public class Cart {
+
+    private static Cart cart;
     // {Drink1(Coke), 2},{Drink
     Map<Drink, Integer> cartItems;
     String msg;
@@ -20,6 +22,12 @@ public class Cart {
     public Cart() {
         cartItems = new HashMap<>();
         returnAmount = new OptimalAmount();
+    }
+
+    public static Cart getInstance() {
+        if(cart == null)
+            cart = new Cart();
+        return cart;
     }
     public OptimalAmount getReturnAmount() {
         return returnAmount;
