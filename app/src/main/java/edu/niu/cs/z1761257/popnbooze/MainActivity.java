@@ -20,6 +20,7 @@ import android.view.View;
 
 
 
+
 public class MainActivity extends AppCompatActivity {
 
     // Declare Variables
@@ -27,11 +28,11 @@ public class MainActivity extends AppCompatActivity {
     List<ParseObject> ob;
     ProgressDialog mProgressDialog;
     ListViewAdapter adapter;
-    private List<Drink> drinklist = null;
+    List<Drink> drinklist = null;
     static Double Money = 0.0, TOTAL =0.0;
     public static TextView moneyTV;
     public static TextView totalTV;
-    Drink drink;
+   // Drink drink;
     static final MediaPlayer mp = new MediaPlayer();
 
     @Override
@@ -44,26 +45,37 @@ public class MainActivity extends AppCompatActivity {
         moneyTV = (TextView)findViewById(R.id.moneyTextView);
         totalTV = (TextView)findViewById(R.id.itemTotalTextView);
         mp.create(this,R.raw.basso);
-    }
+    }//end of onCreate
 
     // RemoteDataTask AsyncTask
     private class RemoteDataTask extends AsyncTask<Void, Void, Void> {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-           //  Create a progressdialog
+           //  Create a progress dialog
+            progressDialog();
+
+        }
+
+        public void progressDialog(){
             mProgressDialog = new ProgressDialog(MainActivity.this);
-            // Set progressdialog title
+            // Set progress dialog title
             mProgressDialog.setTitle("Vending Machine");
-            // Set progressdialog message
+            // Set progress dialog message
             mProgressDialog.setMessage("Loading...");
             mProgressDialog.setIndeterminate(false);
-            // Show progressdialog
+            // Show progres sdialog
             mProgressDialog.show();
-        }
+        }//end of progressDialog
 
         @Override
         protected Void doInBackground(Void... params) {
+            reloadList();
+            return null;
+        }//end of doInBackground
+
+        //Download data from cloud
+         public void reloadList(){
             // Create the array
             drinklist = new ArrayList<Drink>();
             try {
@@ -83,16 +95,19 @@ public class MainActivity extends AppCompatActivity {
                     drinks.setItem_Name((String) drink.get("item_Name"));
                     drinks.setItem_Cost((String) drink.get("item_Price"));
                     drinks.setItem_Qty((String) drink.get("item_Qty"));
+                    drinks.setObjectID((String) drink.get("objectId"));
+                    drinks.setItem_type((String)drink.get("item_type"));
+                    drinks.setItem_Calories((String) drink.get("item_Calories"));
                     drinks.setItem_img( image.getUrl());
-                   // drinks.setFlag(image.getUrl());
+
+                    // drinks.setFlag(image.getUrl());
                     drinklist.add(drinks);
                 }
             } catch (ParseException e) {
                 Log.e("Error", e.getMessage());
                 e.printStackTrace();
             }
-            return null;
-        }
+        }//end of reloadList
 
         @Override
         protected void onPostExecute(Void result) {
@@ -105,9 +120,13 @@ public class MainActivity extends AppCompatActivity {
             listview.setAdapter(adapter);
             // Close the progressdialog
             mProgressDialog.dismiss();
-        }
-    }
+        }//end of onPostExecute
+    }//end of RemoteDataTask
 
+
+    /*
+        Buttons for currency input $20, $10, $5, $1, $.25
+     */
     public void b20(View view){
         Money += 20;
         Display();
@@ -129,11 +148,15 @@ public class MainActivity extends AppCompatActivity {
         Display();
     }
 
+    //Displays total money @ moneyTextView
     public void Display(){
         this.setMoney(Money);
 
         moneyTV.setText("Money: $"+new DecimalFormat("##.##").format(Money));
     }
+
+
+    //Set and get properties for money
 
     public static void setMoney(Double money) {
         Money = money;
@@ -144,4 +167,4 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-}
+}//end of MainActivity

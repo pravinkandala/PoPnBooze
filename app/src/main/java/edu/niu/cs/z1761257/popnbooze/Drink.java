@@ -6,9 +6,24 @@ package edu.niu.cs.z1761257.popnbooze;
  */
 public class Drink {
 
-    private String item_Name,item_img;
+    private String item_Name,item_img, objectID,item_type;
     private String item_Cost, item_Calories, item_Qty;
 
+    public void setObjectID(String objectID) {
+        this.objectID = objectID;
+    }
+
+    public String getObjectID() {
+        return objectID;
+    }
+
+    public void setItem_type(String item_type) {
+        this.item_type = item_type;
+    }
+
+    public String getItem_type() {
+        return item_type;
+    }
 
     public void setItem_Name(String item_Name) {
         this.item_Name = item_Name;
