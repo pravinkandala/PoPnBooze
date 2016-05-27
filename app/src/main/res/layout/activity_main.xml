@@ -5,15 +5,21 @@
 
     <ListView
         android:id="@+id/listview"
-        android:layout_width="260dp"
-        android:layout_height="260dp" />
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true"
+        android:divider="#ff0000"
+        android:dividerHeight="1dp"
+        android:headerDividersEnabled="false"
+        android:smoothScrollbar="true" />
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/listview"
-        android:weightSum="1">
+        android:weightSum="1"
+        android:layout_below="@+id/moneyTextView">
 
         <TextView
             android:layout_width="match_parent"
@@ -35,7 +41,8 @@
                 android:layout_height="wrap_content"
                 android:text="$20"
                 android:id="@+id/bill20"
-                android:onClick="b20" />
+                android:onClick="b20"
+                android:layout_marginLeft="5dp" />
 
             <Button
                 android:layout_width="75dp"
@@ -66,6 +73,22 @@
                 android:onClick="bp25" />
 
         </TableRow>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Collect"
+            android:id="@+id/collectButton"
+            android:layout_gravity="center_horizontal"
+            android:onClick="collectDrinks" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cancel"
+            android:id="@+id/button2"
+            android:layout_gravity="center_horizontal"
+            android:onClick="cancel" />
     </LinearLayout>
 
     <TextView
@@ -74,8 +97,13 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Total: "
         android:id="@+id/itemTotalTextView"
-        android:layout_toEndOf="@+id/listview"
-        android:textAlignment="textStart" />
+        android:textAlignment="textStart"
+        android:layout_below="@+id/listview"
+        android:layout_alignParentStart="true"
+        android:background="@color/abc_input_method_navigation_guard"
+        android:textColor="#ff0000"
+        android:typeface="monospace"
+        android:shadowColor="#ff4141" />
 
     <TextView
         android:layout_width="match_parent"
@@ -84,6 +112,9 @@
         android:text="Money:"
         android:id="@+id/moneyTextView"
         android:layout_below="@+id/itemTotalTextView"
-        android:layout_toEndOf="@+id/listview" />
+        android:layout_alignParentStart="true"
+        android:background="@color/abc_input_method_navigation_guard"
+        android:textColor="#00ff19"
+        android:typeface="monospace" />
 
 </RelativeLayout>

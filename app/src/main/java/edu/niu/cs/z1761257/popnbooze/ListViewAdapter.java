@@ -4,6 +4,8 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -35,6 +37,8 @@ public class ListViewAdapter extends BaseAdapter {
         final ParseObject eventObject = new ParseObject("Drinks");
         Cart cart = new Cart();
         OptimalAmount optimalAmount = new OptimalAmount();
+
+
 
 
 
@@ -80,7 +84,7 @@ public class ListViewAdapter extends BaseAdapter {
             // Locate the TextViews in listview_item.xml
             holder.name = (TextView) view.findViewById(R.id.nameTV);
             holder.price = (TextView) view.findViewById(R.id.costTV);
-            holder.qty = (TextView) view.findViewById(R.id.caloriesLabel);
+            holder.qty = (TextView) view.findViewById(R.id.caloriesTV);
             // Locate the ImageView in listview_item.xml
             holder.pic = (ImageView) view.findViewById(R.id.pic);
             view.setTag(holder);
@@ -94,6 +98,7 @@ public class ListViewAdapter extends BaseAdapter {
         // Set the results into ImageView
         imageLoader.DisplayImage(drinkList.get(position).getItem_img(),
                 holder.pic);
+
         // Listen for ListView Item Click
         view.setOnClickListener(new View.OnClickListener() {
 
@@ -116,17 +121,7 @@ public class ListViewAdapter extends BaseAdapter {
                     MainActivity.setMoney(a);
                     qty = qty - 1;
                     selectedDrink.setItem_Qty(qty.toString());
-//                    eventObject.put("item_Name",drinkList.get(position).getItem_Name());
-//                    eventObject.put("item_Qty",qty);
-//                    eventObject.saveInBackground(new SaveCallback() {
-//                        public void done(ParseException e) {
-//                            if (e == null) {
-//                              //  Toast.makeText(getActivity(), "success", Toast.LENGTH_SHORT).show();
-//                            } else {
-//                                Toast.makeText(context, "fail to connect parse.com", Toast.LENGTH_SHORT).show();
-//                            }
-//                        }
-//                    });
+//
                     MainActivity.moneyTV.setText("money: $" + new DecimalFormat("##.##").format(a));
                     MainActivity.totalTV.setText("Total: " + new DecimalFormat("##.##").format(total));
 
@@ -136,13 +131,19 @@ public class ListViewAdapter extends BaseAdapter {
                     cart.optimise(a);
                     optimalAmount = cart.getReturnAmount();
 
+                    Animation animAccelerateDecelerate = AnimationUtils.loadAnimation(context, R.anim.bottle_fall);
+                    holder.pic.startAnimation(animAccelerateDecelerate);
+
+
+
+
                     Toast.makeText(context,"Dollars:"+ optimalAmount.dollars + "Quarters" + optimalAmount.quarters + "Dimes: " + optimalAmount.dimes + "Cents: "+ optimalAmount.cents,Toast.LENGTH_SHORT).show();
 
                 } else if (qty < 1) {
 
                     MainActivity.mp.start();
 
-                    MainActivity.totalTV.setText("No Coke Stock");
+                    MainActivity.totalTV.setText("No "+ selectedDrink.getItem_Name() + " Stock");
 
                 } else {
                     double b = cost - a;
@@ -151,10 +152,14 @@ public class ListViewAdapter extends BaseAdapter {
             }
 
         });
+
+
         return view;
+    }
 
-
-
+    public void collectButton(View view){
+        total = 0.0;
+        MainActivity.setMoney(0.0);
 
     }
 }
